@@ -3,15 +3,14 @@ deploy:
     name: nvidia/cuda:8.0-cudnn5-runtime
     install:
     - apt-get update && apt-get install -y python3-minimal python3-pip
-    - pip3 install riseml
     - pip3 install -r requirements.txt
   gpu: yes
   run:
     - python3 demo.py
   input:
-    image: text/plain
+    text: text/plain
   output:
-    image: text/plain
+    text: text/plain
   demo:
     title: Sentiment predictor
 description: Demo for simple implementation of "Learning to Generate Reviews and Discovering Sentiment".

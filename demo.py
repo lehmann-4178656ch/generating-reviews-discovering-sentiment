@@ -1,16 +1,27 @@
-from encoder import Model
 from numpy import mean
+import riseml
 
-text = [
-    'Just what I was looking for. Nice fitted pants, exactly matched seam to color contrast with other pants I own. Highly recommended and also very happy!',
-    'The package received was blank and has no barcode. A waste of time and money.',
-    'I couldn’t figure out how to use just one and my favorite running app. I use it all the time. Good quality, You cant beat the price.',
-    'Great little item. Hard to put on the crib without some kind of embellishment. My guess is just like the screw kind of attachment I had.'
-]
+from encoder import Model
+from utils import preprocess
+
+
 model = Model()
-text_features = model.transform(text)
 
-for i in range(text_features.shape[0]):
+def predict(data):
+    lines_in = []
+    lines_out = []
+    string_data = data.decode("utf-8")
+    for i in range(len(string_data)):
+        lines_in.append(string_data[:i])
+    text_features = model.transform(lines_in)
+
     # https://github.com/openai/generating-reviews-discovering-sentiment/issues/2
-    sentiment = text_features[i][2388]
-    print("Sentiment for text {i}: {s}".format(i=i,s=sentiment))
+    sentiments = text_features[:, 2388]
+
+    for i in range(len(sentiments)):
+        lines_out.append("Sentiment for text '{i}': {s}".format(
+            i=lines_in[i], s=sentiments[i]))
+    result = '\n'.join(lines_out)
+    return result.encode("utf-8")
+
+riseml.serve(predict)
