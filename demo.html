@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Demo</title>
+  <script src="jquery-3.2.1.min.js"></script>
+  <script src="settings.js"></script>
+  <script>
+function build(boundary, text) {
+  var dashdash = '--';
+  var crlf = '\r\n';
+  var res = '';
+
+  res += dashdash;
+  res += boundary;
+  res += crlf;
+  res += 'Content-Disposition: form-data; name="text"; filename="dummy"';
+  res += crlf;
+  res += 'Content-Type: text/plain';
+  res += crlf;
+  res += crlf;
+  res += text;
+  res += crlf;
+  res += dashdash;
+  res += boundary;
+  res += dashdash;
+  res += crlf;
+  return res;
+}
+
+function color(value) {
+  return "0000ff";
+}
+
+function load() {
+  $('#result').html("<img src='./loading.gif' />");
+}
+
+function displayResult(data) {
+  console.log(data);
+  var res = "";
+  for (var i = 0; i < data.values.length; i++) {
+    res += "<span style='color: #"+color(data.values[i])+"'>"+data.chars[i]+"</span>";
+  }
+  $('#result').html(res);
+}
+
+$(document).ready(function() {
+  $("#form").on("submit", function() {
+    load();
+    var text = JSON.stringify({"text": $("#input").val() + " ", "method": "text"});
+    var boundary = '------multipartformboundary' + (new Date).getTime();
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", predict_url, true);
+    xhr.setRequestHeader('content-type', 'multipart/form-data; boundary='+boundary);
+    xhr.setRequestHeader('Authorization', predict_authkey);
+    xhr.send(build(boundary, text));
+    xhr.onload = function() {
+      displayResult(JSON.parse(xhr.response));
+    }
+    return false;
+  });
+});
+  </script>
+  </head>
+  <body>
+    <div id="result"></div>
+    <form id="form" enctype="mulitpart/form-data">
+      <textarea id="input" name="text"></textarea>
+      <input type="submit" />
+    </form>
+  </body>
+</html>

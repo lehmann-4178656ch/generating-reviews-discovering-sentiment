@@ -4,6 +4,4 @@ tqdm
 sklearn
 scipy
 riseml
-colour
-pillow
 
