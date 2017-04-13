@@ -27,8 +27,47 @@ function build(boundary, text) {
   return res;
 }
 
+// http://stackoverflow.com/a/11850486
+function Interpolate(start, end, steps, count) {
+  var s = start,
+      e = end,
+      final = s + (((e - s) / steps) * count);
+  return Math.floor(final);
+}
+
+function Color(_r, _g, _b) {
+    var r, g, b;
+    var setColors = function(_r, _g, _b) {
+        r = _r;
+        g = _g;
+        b = _b;
+    };
+
+    setColors(_r, _g, _b);
+    this.getColors = function() {
+        var colors = {
+            r: r,
+            g: g,
+            b: b
+        };
+        return colors;
+    };
+}
+
 function color(value) {
-  return "0000ff";
+  value = parseFloat(value);
+  var start = new Color(255, 255, 255);
+  var end = new Color(6, 170, 60);
+  if (value < 0) {
+    end = new Color(232, 9, 26);
+    value = -1.0 * value;
+  }
+  var startColors = start.getColors();
+  var endColors = end.getColors();
+  var r = Interpolate(startColors.r, endColors.r, 100, value * 50);
+  var g = Interpolate(startColors.g, endColors.g, 100, value * 50);
+  var b = Interpolate(startColors.b, endColors.b, 100, value * 50);
+  return "rgb(" + r + "," + g + "," + b + ")";
 }
 
 function load() {
@@ -39,7 +78,7 @@ function displayResult(data) {
   console.log(data);
   var res = "";
   for (var i = 0; i < data.values.length; i++) {
-    res += "<span style='color: #"+color(data.values[i])+"'>"+data.chars[i]+"</span>";
+    res += "<span style='background-color: "+color(data.values[i])+"'>"+data.chars[i]+"</span>";
   }
   $('#result').html(res);
 }
