@@ -1,27 +1,44 @@
+import argparse
+from io import BytesIO
 from numpy import mean
 import riseml
 
 from encoder import Model
 from utils import preprocess
 
+from image_gen import gen_image
 
 model = Model()
 
-def predict(data):
+def predict_sentiment(data):
+    text_features = model.transform([data.decode("utf-8")])
+    output_image = BytesIO()
+    img = gen_image([" "], text_features[:, 2388])
+    img.save(output_image, format='JPEG')
+    return output_image.getvalue()
+
+def predict_image(data):
     lines_in = []
     lines_out = []
     string_data = data.decode("utf-8")
-    for i in range(len(string_data)):
+    for i in range(1, len(string_data)):
         lines_in.append(string_data[:i])
     text_features = model.transform(lines_in)
 
     # https://github.com/openai/generating-reviews-discovering-sentiment/issues/2
     sentiments = text_features[:, 2388]
+    output_image = BytesIO()
+    img = gen_image(lines_in, sentiments)
+    img.save(output_image, format='JPEG')
+    return output_image.getvalue()
 
-    for i in range(len(sentiments)):
-        lines_out.append("Sentiment for text '{i}': {s}".format(
-            i=lines_in[i], s=sentiments[i]))
-    result = '\n'.join(lines_out)
-    return result.encode("utf-8")
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--image', action='store_true')
+    args = parser.parse_args()
 
-riseml.serve(predict)
+    if args.image:
+        riseml.serve(predict_image)
+    else:
+        riseml.serve(predict_sentiment)
+
