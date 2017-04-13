@@ -10,7 +10,7 @@ deploy:
   input:
     text: text/plain
   output:
-    text: text/plain
+    text: image/jpeg
   demo:
     title: Sentiment predictor
 description: Demo for simple implementation of "Learning to Generate Reviews and Discovering Sentiment".
