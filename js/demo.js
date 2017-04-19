@@ -87,18 +87,21 @@ function displayError(target) {
 }
 
 function transform(text, success, error) {
+  var text_in = text;
+  var success_callback = success;
+  var error_callback = error;
   return function() {
-    var text = JSON.stringify({"text": text, "method": "text"});
+    var text = JSON.stringify({"text": text_in, "method": "text"});
     var boundary = '------multipartformboundary' + (new Date).getTime();
     var xhr = new XMLHttpRequest();
     xhr.open("POST", predict_url, true);
     xhr.setRequestHeader('content-type', 'multipart/form-data; boundary='+boundary);
     xhr.setRequestHeader('Authorization', predict_authkey);
     xhr.onload = function() {
-      success(JSON.parse(xhr.response));
+      success_callback(JSON.parse(xhr.response));
     }
     xhr.onerror = function() {
-      error();
+      error_callback();
     }
     xhr.send(build(boundary, text));
   }
@@ -118,7 +121,9 @@ function run(source, target) {
     }
   }
   var modal = $('#loadingModal');
+  modal.off('shown.bs.modal');
   modal.on('shown.bs.modal', transform(text, displaySuccess(target), displayError(target)));
+  console.log(jQuery._data( document.getElementById("loadingModal"), "events" ));
   modal.modal('show');
 }
 
