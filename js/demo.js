@@ -63,7 +63,7 @@ function color(value) {
   return "rgb(" + r + "," + g + "," + b + ")";
 }
 
-function displayResult(target) {
+function displaySuccess(target) {
   return function(data) {
     var res = "";
     for (var i = 0; i < data.values.length; i++) {
@@ -74,17 +74,33 @@ function displayResult(target) {
   }
 }
 
-function transform(text, callback) {
-  $('#loadingModal').modal('show');
-  var text = JSON.stringify({"text": text, "method": "text"});
-  var boundary = '------multipartformboundary' + (new Date).getTime();
-  var xhr = new XMLHttpRequest();
-  xhr.open("POST", predict_url, true);
-  xhr.setRequestHeader('content-type', 'multipart/form-data; boundary='+boundary);
-  xhr.setRequestHeader('Authorization', predict_authkey);
-  xhr.send(build(boundary, text));
-  xhr.onload = function() {
-    callback(JSON.parse(xhr.response));
+function displayError(target) {
+  return function() {
+    var data = "Sorry, an error occured :-(";
+    var res = "";
+    for (var i = 0; i < data.length; i++) {
+      res += "<span style='background-color: "+color(-4)+"'>"+data[i]+"</span>";
+    }
+    target.html(res);
+    $('#loadingModal').modal('hide');
+  }
+}
+
+function transform(text, success, error) {
+  return function() {
+    var text = JSON.stringify({"text": text, "method": "text"});
+    var boundary = '------multipartformboundary' + (new Date).getTime();
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", predict_url, true);
+    xhr.setRequestHeader('content-type', 'multipart/form-data; boundary='+boundary);
+    xhr.setRequestHeader('Authorization', predict_authkey);
+    xhr.onload = function() {
+      success(JSON.parse(xhr.response));
+    }
+    xhr.onerror = function() {
+      error();
+    }
+    xhr.send(build(boundary, text));
   }
 }
 
@@ -101,7 +117,9 @@ function run(source, target) {
       return false;
     }
   }
-  transform(text, displayResult(target));
+  var modal = $('#loadingModal');
+  modal.on('shown.bs.modal', transform(text, displaySuccess(target), displayError(target)));
+  modal.modal('show');
 }
 
 $(document).ready(function() {
