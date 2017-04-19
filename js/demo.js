@@ -63,32 +63,52 @@ function color(value) {
   return "rgb(" + r + "," + g + "," + b + ")";
 }
 
-function load() {
-  $('#result').html("<img src='./loading.gif' />");
+function displayResult(target) {
+  return function(data) {
+    var res = "";
+    for (var i = 0; i < data.values.length; i++) {
+      res += "<span style='background-color: "+color(data.values[i])+"'>"+data.chars[i]+"</span>";
+    }
+    target.html(res);
+    $('#loadingModal').modal('hide');
+  }
 }
 
-function displayResult(data) {
-  console.log(data);
-  var res = "";
-  for (var i = 0; i < data.values.length; i++) {
-    res += "<span style='background-color: "+color(data.values[i])+"'>"+data.chars[i]+"</span>";
+function transform(text, callback) {
+  $('#loadingModal').modal('show');
+  var text = JSON.stringify({"text": text, "method": "text"});
+  var boundary = '------multipartformboundary' + (new Date).getTime();
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", predict_url, true);
+  xhr.setRequestHeader('content-type', 'multipart/form-data; boundary='+boundary);
+  xhr.setRequestHeader('Authorization', predict_authkey);
+  xhr.send(build(boundary, text));
+  xhr.onload = function() {
+    callback(JSON.parse(xhr.response));
   }
-  $('#result').html(res);
+}
+
+function run(source, target) {
+  var text = "";
+  if (typeof source.val === 'function') {
+    text = source.val();
+  }
+  if (text === "") {
+    if (typeof source.text === 'function') {
+      text = source.text();
+    } else {
+      alert("Can not retrieve text");
+      return false;
+    }
+  }
+  transform(text, displayResult(target));
 }
 
 $(document).ready(function() {
-  $("#form").on("submit", function() {
-    load();
-    var text = JSON.stringify({"text": $("#input").val(), "method": "text"});
-    var boundary = '------multipartformboundary' + (new Date).getTime();
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", predict_url, true);
-    xhr.setRequestHeader('content-type', 'multipart/form-data; boundary='+boundary);
-    xhr.setRequestHeader('Authorization', predict_authkey);
-    xhr.send(build(boundary, text));
-    xhr.onload = function() {
-      displayResult(JSON.parse(xhr.response));
-    }
-    return false;
+  $(".try").each(function(index) {
+    $(this).on("click", function() {
+      run($("#"+$(this).data("source")), $("#"+$(this).data("result")));
+      return false;
+    });
   });
 });

@@ -1,19 +1,75 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title>Demo</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="./favicon.ico">
+
+    <title>RiseML &bull; &quot;Learning to Generate Reviews and Discovering Sentiment&quot;</title>
+
+    <link rel="stylesheet" href="./css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="./css/demo.css" />
-    <script src="./js/jquery-3.2.1.min.js"></script>
-    <script src="settings.js"></script>
-    <script src="./js/demo.js"></script>
   </head>
   <body>
-    <form id="form" enctype="mulitpart/form-data">
-      <textarea id="input" name="text" rows="5" cols="100">This is a crappy review of a nice product.</textarea>
-      <br/>
-      <input type="submit">
-    </form>
-    <br/>
-    <div id="result"></div>
+    <div class="container">
+      <header class="header">
+        <h1>RiseML<br />&quot;Learning to Generate Reviews and Discovering Sentiment&quot;</h1>
+      </header>
+
+      <div class="jumbotron">
+        <div class="form-group">
+          <textarea id="input" name="text" class="form-control">This is a crappy review of a nice product.</textarea>
+        </div>
+        <p>
+          <button class="btn btn-lg btn-primary try" data-source="input" data-result="result">Analyze</button>
+        </p>
+        <p id="result"></p>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-6">
+          <h3>Positive <button class="btn btn-primary try" data-source="ex1s" data-result="ex1t">Try</button></h3>
+          <p id="ex1s" hidden>Just what I was looking for. Nice fitted pants, exactly matched seam to color contrast with other pants I own. Highly recommended and also very happy!</p>
+          <p id="ex1t">Just what I was looking for. Nice fitted pants, exactly matched seam to color contrast with other pants I own. Highly recommended and also very happy!</p>
+        </div>
+        <div class="col-lg-6">
+          <h3>Negative <button class="btn btn-primary try" data-source="ex2s" data-result="ex2t">Try</button></h3>
+          <p id="ex2s" hidden>The package received was blank and has no barcode. A waste of time and money.</p>
+          <p id="ex2t">The package received was blank and has no barcode. A waste of time and money.</p>
+       </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-12">
+          <h3>Longer <button class="btn btn-primary try" data-source="ex3s" data-result="ex3t">Try</button></h3>
+          <p id="ex3s" hidden>This is one of Crichton's best books. The characters of Karen Ross, Peter Elliot, Munro, and Amy are beautifully developed and their interactions are exciting, complex, and fast-paced throughout this impressive novel. And about 99.8 percent of that got lost in the film. Seriously, the screenplay AND the directing were horrendous and clearly done by people who could not fathom what was good about the novel. I can't fault the actors because frankly, they never had a chance to make this turkey live up to Crichton's original work. I know good novels, especially those with a science fiction edge, are hard to bring to the screen in a way that lives up to the original. But this may be the absolute worst disparity in quality between novel and screen adaptation ever. The book is really, really good. The movie is just dreadful.</p>
+          <p id="ex3t">This is one of Crichton's best books. The characters of Karen Ross, Peter Elliot, Munro, and Amy are beautifully developed and their interactions are exciting, complex, and fast-paced throughout this impressive novel. And about 99.8 percent of that got lost in the film. Seriously, the screenplay AND the directing were horrendous and clearly done by people who could not fathom what was good about the novel. I can't fault the actors because frankly, they never had a chance to make this turkey live up to Crichton's original work. I know good novels, especially those with a science fiction edge, are hard to bring to the screen in a way that lives up to the original. But this may be the absolute worst disparity in quality between novel and screen adaptation ever. The book is really, really good. The movie is just dreadful.</p>
+        </div>
+      </div>
+      <!-- Site footer -->
+      <footer class="footer">
+        <p>&copy; Add something here!</p>
+      </footer>
+    </div>
+
+<div class="modal fade" id="loadingModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Analyzing ... please wait ...</h5>
+      </div>
+      <div class="modal-body">
+        <p><img src="./loading.gif" /></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <script src="./js/jquery-3.2.1.min.js"></script>
+    <script src="./js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+    <script src="./js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+    <script src="settings.js"></script>
+    <script src="./js/demo.js"></script>
   </body>
 </html>

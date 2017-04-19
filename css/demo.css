@@ -1,0 +1,42 @@
+.footer {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  margin-top: 0.5rem;
+  border-top: 1px solid #eee;
+}
+
+.header {
+  padding-bottom: 0.5rem;
+  padding-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid #eee;
+}
+
+h1 {
+  text-align: center;
+}
+
+/* Main marketing message and sign up button */
+.jumbotron {
+  text-align: center;
+}
+
+#result, #input {
+  border: 1px solid rgba(0,0,0,.15);
+  border-radius: .25rem;
+  min-height: 5rem;
+  text-align: left;
+  padding: .5rem .75rem;
+  font-size: 1rem;
+  line-height: 1.25;
+  background-color: #fff;
+}
+
+/* Responsive: Portrait tablets and up */
+@media screen and (min-width: 768px) {
+  .header,
+  .footer {
+    padding-right: 0;
+    padding-left: 0;
+  }
+}
