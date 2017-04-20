@@ -3,7 +3,7 @@ deploy:
     name: nvidia/cuda:8.0-cudnn5-runtime
     install:
     - apt-get update && apt-get install -y python3-minimal python3-pip
-    - pip3 install -r requirements.txt
+    - pip3 install -r requirements.txt -r requirements-riseml.txt
   gpu: yes
   run:
     - python3 demo.py
