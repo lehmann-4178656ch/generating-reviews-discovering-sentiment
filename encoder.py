@@ -202,6 +202,7 @@ class Model(object):
             return Fs
 
         def sequence_features(x, index):
+            tstart = time.time()
             x = preprocess(x)
             n = len(x)
             smb = np.zeros((2, 1, hps.nhidden))
@@ -213,6 +214,8 @@ class Model(object):
                 xmb, mmb = batch_pad([xsubseq], 1, nsteps)
                 seq_c, smb = sess.run([cells, states], {X: xmb, S: smb, M: mmb})
                 fs.append(seq_c[-len(xsubseq):, 0, index])
+            print('%0.3f seconds to transform %d examples' %
+                  (time.time() - tstart, n))
             return np.concatenate(fs)
 
         self.transform = transform
